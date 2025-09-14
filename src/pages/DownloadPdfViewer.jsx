@@ -52,6 +52,10 @@ function DownloadPdfViewer() {
       setIsLoading(false);
       return setPdfError(true);
     }
+    if (blob.type !== "application/pdf") {
+      blob = new Blob([blob], { type: "application/pdf" });
+    }
+
     
     setfiledata(blob)
     setIsLoading(false)

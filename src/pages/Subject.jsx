@@ -190,7 +190,7 @@ function Subject() {
 
             {/* Functionality  */}
             <div className="py-6">
-              {isInstalled ? (
+              {!isInstalled ? (
                 <>
                   <p>
                     Install <span className="font-bold">NoteLab's</span> Web App
