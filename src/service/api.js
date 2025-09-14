@@ -1,7 +1,7 @@
 import axios from "axios";
 
-const url = 'http://localhost:3000';
-// const url = "https://notelab-backend.vercel.app";
+// const url = 'http://localhost:3000';
+const url = "https://notelab-backend.vercel.app";
 
 const api = axios.create({
   baseURL: url,
