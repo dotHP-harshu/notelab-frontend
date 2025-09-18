@@ -4,8 +4,8 @@ import Logo from "../components/Logo";
 function Login() {
   const handleLogin = () => {
     try {
-      window.location.href = "http://localhost:3000/auth/google";
-      // window.location.href = "https://notelab-backend.vercel.app/auth/google";
+      // window.location.href = "http://localhost:3000/auth/google";
+      window.location.href = "https://notelab-backend.vercel.app/auth/google";
     } catch (error) {
       navigate("/login");
     }
