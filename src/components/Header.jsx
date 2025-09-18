@@ -6,7 +6,10 @@ function Header() {
   const navigate = useNavigate()
   return (
     <header className="w-full flex justify-between items-center px-[5vw] py-4">
-      <span onClick={()=> navigate("/home")} className='w-fit h-fit cursor-pointer '>
+      <span
+        onClick={() => navigate("/")}
+        className="w-fit h-fit cursor-pointer "
+      >
         <Logo size={40} />
       </span>
 

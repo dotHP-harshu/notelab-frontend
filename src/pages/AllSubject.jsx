@@ -6,50 +6,33 @@ import { BsArrowLeft } from "react-icons/bs";
 import { useNavigate, useSearchParams } from "react-router";
 import { getSubjectsApi } from "../service/api";
 import Loader from "../components/Loader";
-import Error from "../components/Error";
+import { useQuery } from "@tanstack/react-query";
 
 function AllSubject() {
   const navigate = useNavigate();
   const [searchParams, setSearchParams] = useSearchParams();
 
-  const [subjects, setSubjects] = useState(null);
-  const [pagination, setPagination] = useState(null);
   const page = Number(searchParams.get("page")) || 1;
-  const [error, setError] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
 
-  const getSubjects = useCallback(async () => {
-    setIsLoading(true);
-    try {
-      const { data, error } = await getSubjectsApi(page, 5);
-
-      if (error) {
-        return setError(error.message);
-      }
-      const loadedSubjects = data?.data?.subjects;
-
-      setSubjects([...loadedSubjects]);
-      setPagination(data?.data?.pagination);
-    } catch (error) {
-      setError(error.message);
-    } finally {
-      setIsLoading(false);
-    }
+  const { data, isLoading, error } = useQuery({
+    queryKey: ["subjects", page],
+    queryFn: () => getSubjectsApi(page, limit).then((res) => res.data.data),
+    keepPreviousData: true,
+    staleTime: 5 * 60 * 1000, // cache for 5 mins
   });
+
+  const subjects = data?.subjects || [];
+  const pagination = data?.pagination || null;
 
   const handlePrev = () => {
     const prevPage = page - 1;
     navigate(`/all-subjects?page=${prevPage}`);
   };
+
   const handleNext = () => {
     const nextPage = page + 1;
     navigate(`/all-subjects?page=${nextPage}`);
   };
-
-  useEffect(() => {
-    getSubjects();
-  }, [page]);
-
   if (isLoading) {
     return (
       <div className="h-dvh w-full flex justify-center items-center">
@@ -62,7 +45,6 @@ function AllSubject() {
     <>
       <Header />
 
-      {error && <Error setError={setError} error={error} />}
       <div className="pl-6">
         <span className="cursor-pointer" onClick={() => navigate(-1)}>
           <BsArrowLeft size={30} />

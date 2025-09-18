@@ -1,22 +1,24 @@
-import React from "react";
+import React, { lazy, Suspense } from "react";
 import { createBrowserRouter, Navigate } from "react-router";
-import Login from "./pages/Login";
-import Home from "./pages/Home";
-import Subject from "./pages/Subject";
-import LoginVerify from "./pages/LoginVerify";
 import { RouterProvider } from "react-router/dom";
-import Admin from "./pages/Admin";
-import ProtectedRoutes from "./components/ProtectedRoutes";
-import AdminProtected from "./components/AdminProtected";
-import PdfViewer from "./pages/PdfViewer";
-import Profile from "./pages/Profile";
-// import Bookmark from './pages/Bookmark'
-import Search from "./pages/Search";
-import AllSubject from "./pages/AllSubject";
 import { PWAInstallProvider } from "./context/PWAInstallProvider";
-import DownloadSubject from "./pages/DownloadSubject";
-import DownloadPdfViewer from "./pages/DownloadPdfViewer";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import Loader from "./components/Loader";
+import ErrorBoundary from "./components/ErrorBoundry";
+
+const Login = lazy(() => import("./pages/Login"));
+const Home = lazy(() => import("./pages/Home"));
+const Subject = lazy(() => import("./pages/Subject"));
+const LoginVerify = lazy(() => import("./pages/LoginVerify"));
+const ProtectedRoutes = lazy(() => import("./components/ProtectedRoutes"));
+const AdminProtected = lazy(() => import("./components/AdminProtected"));
+const PdfViewer = lazy(() => import("./pages/PdfViewer"));
+const Profile = lazy(() => import("./pages/Profile"));
+const DownloadSubject = lazy(() => import("./pages/DownloadSubject"));
+const DownloadPdfViewer = lazy(() => "./pages/DownloadPdfViewer");
+const Search = lazy(() => import("./pages/Search"));
+const Admin = lazy(() => import("./pages/Admin"));
+const AllSubject = lazy(() => import("./pages/AllSubject"));
 
 const queryClient = new QueryClient();
 
@@ -29,49 +31,116 @@ function App() {
       element: <Navigate to={"/home"} replace />,
     },
     {
-      element: <Login />,
+      element: (
+        <Suspense
+          fallback={
+            <div className="h-dvh w-full justify-center items-center flex">
+              <Loader />
+            </div>
+          }
+        >
+          <Login />
+        </Suspense>
+      ),
       path: "/login",
     },
     {
-      element: <LoginVerify />,
+      element: (
+        <Suspense
+          fallback={
+            <div className="h-dvh w-full justify-center items-center flex">
+              <Loader />
+            </div>
+          }
+        >
+          <LoginVerify />
+        </Suspense>
+      ),
       path: "/auth/success/",
     },
 
     {
-      element: <Home />,
+      element: (
+        <Suspense
+          fallback={
+            <div className="h-dvh w-full justify-center items-center flex">
+              <Loader />
+            </div>
+          }
+        >
+          <Home />
+        </Suspense>
+      ),
       path: "/",
+      errorElement: <ErrorBoundary />,
     },
     {
       element: (
         <ProtectedRoutes>
-          <Subject />
+          <Suspense
+            fallback={
+              <div className="h-dvh w-full justify-center items-center flex">
+                <Loader />
+              </div>
+            }
+          >
+            <Subject />
+          </Suspense>
         </ProtectedRoutes>
       ),
       path: "/subject/:subjectId",
+      errorElement: <ErrorBoundary />,
     },
     {
       element: (
         <ProtectedRoutes>
-          <PdfViewer />
+          <Suspense
+            fallback={
+              <div className="h-dvh w-full justify-center items-center flex">
+                <Loader />
+              </div>
+            }
+          >
+            <PdfViewer />
+          </Suspense>
         </ProtectedRoutes>
       ),
       path: "/pdf/:id",
+      errorElement: <ErrorBoundary />,
     },
     {
       element: (
         <ProtectedRoutes>
-          <AllSubject />
+          <Suspense
+            fallback={
+              <div className="h-dvh w-full justify-center items-center flex">
+                <Loader />
+              </div>
+            }
+          >
+            <AllSubject />
+          </Suspense>
         </ProtectedRoutes>
       ),
       path: "/all-subjects",
+      errorElement: <ErrorBoundary />,
     },
     {
       element: (
         <ProtectedRoutes>
-          <Profile />
+          <Suspense
+            fallback={
+              <div className="h-dvh w-full justify-center items-center flex">
+                <Loader />
+              </div>
+            }
+          >
+            <Profile />
+          </Suspense>
         </ProtectedRoutes>
       ),
       path: "/profile",
+      errorElement: <ErrorBoundary />,
     },
     // {
     //   path: "/bookmark",
@@ -79,28 +148,68 @@ function App() {
     // },
     {
       path: "/search",
+      errorElement: <ErrorBoundary />,
       element: (
         <ProtectedRoutes>
-          <Search />
+          <Suspense
+            fallback={
+              <div className="h-dvh w-full justify-center items-center flex">
+                <Loader />
+              </div>
+            }
+          >
+            <Search />
+          </Suspense>
         </ProtectedRoutes>
       ),
     },
     {
       path: "/download/subject/:subjectId",
-      element: <DownloadSubject />,
+      errorElement: <ErrorBoundary />,
+      element: (
+        <Suspense
+          fallback={
+            <div className="h-dvh w-full justify-center items-center flex">
+              <Loader />
+            </div>
+          }
+        >
+          <DownloadSubject />
+        </Suspense>
+      ),
     },
     {
-      element: <DownloadPdfViewer />,
+      element: (
+        <Suspense
+          fallback={
+            <div className="h-dvh w-full justify-center items-center flex">
+              <Loader />
+            </div>
+          }
+        >
+          <DownloadPdfViewer />
+        </Suspense>
+      ),
       path: "/download/pdf",
+      errorElement: <ErrorBoundary />,
     },
 
     {
       element: (
         <AdminProtected>
-          <Admin />
+          <Suspense
+            fallback={
+              <div className="h-dvh w-full justify-center items-center flex">
+                <Loader />
+              </div>
+            }
+          >
+            <Admin />
+          </Suspense>
         </AdminProtected>
       ),
       path: "/admin/:page",
+      errorElement: <ErrorBoundary />,
     },
   ]);
 

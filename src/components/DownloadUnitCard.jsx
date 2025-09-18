@@ -19,7 +19,9 @@ function DownloadUnitCard({ unit, imgType , subjectId}) {
       <div className="w-[200px] h-[300px] overflow-hidden  border-2 border-border-color rounded-md flex flex-col justify-between items-center">
         <div className="h-[200px] p-4 flex justify-center items-center">
           <img
-            src={`/images/unit/pdf-${imgType}-${getRandomNumber(imgCount[imgType])}.png`}
+            src={`/images/unit/pdf-${imgType}-${getRandomNumber(
+              imgCount[imgType]
+            )}.png`}
             alt="unit-img"
             className="w-1/2 object-contain"
           />
@@ -29,7 +31,11 @@ function DownloadUnitCard({ unit, imgType , subjectId}) {
             {unit?.name}
           </h4>
           <div
-            onClick={() => navigate(`/download/pdf?subjectid=${subjectId}&unitid=${unit.id}`)}
+            onClick={() =>
+              navigate(
+                `/download/pdf?subjectid=${subjectId}&unitid=${unit._id}`
+              )
+            }
             className="mb-1 outline-none select-none text-lg font-semibold tracking-tight bg-primary-color text-bg-color px-2 py-0.5 rounded-md cursor-pointer"
           >
             View

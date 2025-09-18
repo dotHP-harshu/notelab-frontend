@@ -1,13 +1,13 @@
-import React, { useState } from 'react'
-import { useNavigate } from 'react-router';
+import React, { useMemo, useState } from "react";
+import { useNavigate } from "react-router";
 
-const unitImgType = ["a", "b", "c"]
+const unitImgType = ["a", "b", "c"];
 
 const imgCount = {
-  a:6,
-  b:6,
-  c:6
-}
+  a: 6,
+  b: 6,
+  c: 6,
+};
 
 const getRandomNumber = (max) => {
   return Math.floor(Math.random() * max) + 1;
@@ -15,12 +15,16 @@ const getRandomNumber = (max) => {
 
 function UnitCard({ unit, imgType }) {
   const navigate = useNavigate();
+  const randomImg = useMemo(
+    () => getRandomNumber(imgCount[imgType]),
+    [imgType]
+  );
   return (
     <div>
       <div className="w-[200px] h-[300px] overflow-hidden  border-2 border-border-color rounded-md flex flex-col justify-between items-center">
         <div className="h-[200px] p-4 flex justify-center items-center">
           <img
-            src={`/images/unit/pdf-${imgType}-${getRandomNumber(6)}.png`}
+            src={`/images/unit/pdf-${imgType}-${randomImg}.png`}
             alt="unit-img"
             className="w-3/4 object-contain"
           />
@@ -41,4 +45,4 @@ function UnitCard({ unit, imgType }) {
   );
 }
 
-export default UnitCard
+export default UnitCard;

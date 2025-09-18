@@ -13,6 +13,7 @@ import { useQuery } from "@tanstack/react-query";
 import { BiArrowToRight } from "react-icons/bi";
 import { FiArrowRightCircle } from "react-icons/fi";
 import { BsFillArrowRightCircleFill } from "react-icons/bs";
+import { GoAlertFill } from "react-icons/go";
 
 function Home() {
   const [error, setError] = useState("");
@@ -75,6 +76,7 @@ function Home() {
               >
                 Study on the Go{" "}
                 <img
+                  loading="lazy"
                   src="/images/star.png"
                   className="w-20 max-xs:w-10 absolute left-full bottom-1/2"
                 />
@@ -87,6 +89,7 @@ function Home() {
               <p className="text-lg font-semibold tracking-wider italic mt-10 max-sm:mt-4 w-fit relative">
                 Happy Learning
                 <img
+                  loading="lazy"
                   src="/images/arrow.png"
                   alt="arrow"
                   className="w-20 max-xs:w-10  absolute rotate-45"
@@ -95,6 +98,7 @@ function Home() {
             </div>
             <div className="p-10 flex justify-center items-center">
               <img
+                loading="lazy"
                 src="/images/home-hero.png"
                 alt="hero"
                 className="w-3/4 max-lg:w-full"
@@ -127,14 +131,15 @@ function Home() {
                     className="text-primary-color animate-pulse"
                   />
                 </div>
-                {semesterSubjectError && (
-                  <p className="text-sm text-error">
-                    {semesterSubjectError.message}
-                  </p>
-                )}
                 {isLoadingSemesterSubjects ? (
                   <Loader />
-                ) : semesterSubjects.length === 0 ? (
+                ) : semesterSubjectError ? (
+                  <p className="text-sm text-text-muted">
+                    <GoAlertFill className="text-primary-color flex gap-4 items-center" />{" "}
+                    There is an error on loading Subjects. Check your internet
+                    connection.
+                  </p>
+                ) : semesterSubjects && semesterSubjects.length === 0 ? (
                   <p>There is no subject.</p>
                 ) : (
                   semesterSubjects.map((sub, i) => (
@@ -170,14 +175,16 @@ function Home() {
                     className="text-primary-color animate-pulse"
                   />
                 </div>
-                {recentSubjectError && (
-                  <p className="text-sm text-error">
-                    {recentSubjectError.message}
-                  </p>
-                )}
+
                 {isLoadingRecentSubject ? (
                   <Loader />
-                ) : recentSubjects.length === 0 ? (
+                ) : recentSubjectError ? (
+                  <p className="text-sm text-text-muted">
+                    <GoAlertFill className="text-primary-color flex gap-4 items-center" />{" "}
+                    There is an error on loading Subjects. Check your internet
+                    connection.
+                  </p>
+                ) : recentSubjects && recentSubjects.length === 0 ? (
                   <p>There is no subject.</p>
                 ) : (
                   recentSubjects.map((sub, i) => (

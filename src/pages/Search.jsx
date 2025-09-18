@@ -6,9 +6,10 @@ import { BsArrowLeft } from "react-icons/bs";
 import { CgSearch } from "react-icons/cg";
 import { searchSubjectApi } from "../service/api";
 import Loader from "../components/Loader";
-import Error from "../components/Error";
 import SubjectCard from "../components/SubjectCard";
 import Navbar from "../components/Navbar";
+import { useQuery } from "@tanstack/react-query";
+import { GoAlertFill } from "react-icons/go";
 
 function Search() {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -18,38 +19,18 @@ function Search() {
   const limit = 5;
 
   const [inputQuery, setInputQuery] = useState(searchParams.get("q") || "");
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState("");
-  const [subjects, setSubjects] = useState(null);
-  const [pagination, setPagination] = useState(null);
   const navigate = useNavigate();
+  const { data, isLoading, error, isFetching, refetch } = useQuery({
+    queryKey: ["search", query, page],
+    queryFn: () =>
+      searchSubjectApi(query, page, limit).then((res) => res.data.data),
+    enabled: !!query,
+    keepPreviousData: true,
+    staleTime: 600000, // 5 minutes
+  });
 
-  // Handles the actual API call
-  const searchSubjects = async () => {
-    if (!query) return;
-    setIsLoading(true);
-    try {
-      const { data, error } = await searchSubjectApi(query, page, limit);
-
-      if (error) {
-        setError(error.message);
-        return;
-      }
-
-      const subs = data?.data?.subjects || [];
-      setSubjects(subs);
-      setPagination(data?.data?.pagination || null);
-    } catch (err) {
-      setError(err.message);
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  // Trigger API call when query or page changes
-  useEffect(() => {
-    searchSubjects();
-  }, [query, page]);
+  const subjects = data?.subjects || [];
+  const pagination = data?.pagination || null;
 
   // When user submits the search
   const handleSearch = (e) => {
@@ -111,21 +92,32 @@ function Search() {
           <div className="w-full min-h-[60dvh] flex justify-center items-center">
             <CgSearch className="text-[10vw] max-sm:text-9xl text-text-muted opacity-50" />
           </div>
-        ) : error ? (
-          <Error error={error} setError={setError} />
-        ) : !subjects ? null : subjects.length === 0 ? (
+        ) : !subjects || error ? (
+          <div className="min-h-[50vh] w-full justify-center items-center flex">
+            <p className="text-sm text-text-muted text-center justify-center items-center flex flex-col">
+              <GoAlertFill className="text-primary-color flex gap-4 items-center" />
+              There is an error on loading Subjects. Check your internet
+              connection.
+            </p>
+          </div>
+        ) : subjects.length === 0 ? (
           <div className="min-h-[60dvh] w-full justify-center items-center flex">
-            <p className="text-xl font-bold text-text-muted">No result found.</p>
+            <p className="text-xl font-bold text-text-muted">
+              No result found.
+            </p>
           </div>
         ) : (
           <>
             {pagination && (
               <div className="mt-6 px-6">
                 <p className="w-fit mb-4 bg-bg-sec-color px-2 border-l-4 text-lg border-l-border-color">
-                  Showing result for : <b className="font-bold ">{searchParams.get("q")}</b>
+                  Showing result for :{" "}
+                  <b className="font-bold ">{searchParams.get("q")}</b>
                 </p>
-                <p  className="text-base w-fit">Total Result : {pagination.total}</p>
-                <p  className="text-base w-fit">
+                <p className="text-base w-fit">
+                  Total Result : {pagination.total}
+                </p>
+                <p className="text-base w-fit">
                   Page: {pagination.page}/{pagination.totalPages}
                 </p>
               </div>
@@ -161,7 +153,7 @@ function Search() {
       </section>
 
       {/* navbar  */}
-      <Navbar/>
+      <Navbar />
       {/* navbar  */}
 
       <Footer />
