@@ -5,7 +5,15 @@ function SubjectCard({ subject }) {
   const navigate = useNavigate();
 
   return (
-    <div className="w-[300px] h-[250px] bg-surface-color border-l-6 border-border-color p-4 shrink-0 ">
+    <div className="w-[300px] h-[250px] bg-surface-color border-l-6 border-border-color p-4 shrink-0 relative">
+      {(new Date() - new Date(subject.updatedAt)) / (1000 * 60 * 60 * 24) <
+        10 && (
+        <img
+          src="/images/new.png"
+          alt="new"
+          className="w-16 absolute top-0 left-0"
+        />
+      )}
       <div className="w-full flex justify-between items-center">
         <div className="subject-img w-16 h-16 overflow-hidden p-2 bg-bg-sec-color">
           <img

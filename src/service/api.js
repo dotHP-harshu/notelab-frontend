@@ -1,6 +1,7 @@
 import axios from "axios";
+import { data } from "react-router";
 
-// const url = 'http://localhost:3000';
+// const url = "http://localhost:3000";
 const url = "https://notelab-backend.vercel.app";
 
 const api = axios.create({
@@ -12,12 +13,10 @@ const request = async (method, url, data = null) => {
   try {
     const config = {};
 
-    if (url === "/subject/add") {
-      config.headers = { "Content-Type": "multipart/form-data" };
-    }
     const res = await api({ method, url, data, ...config });
     return { data: res.data, error: null };
   } catch (error) {
+    console.log(error);
     if (error.status === 401) {
       window.location = "/login";
     }
@@ -33,8 +32,10 @@ export const getUserApi = () => request("GET", "/auth/get-user");
 export const logoutUserApi = () => request("GET", "/auth/logout");
 
 // subject routes
-export const getSubjectsApi = (page, limit) => request("GET", `/subject/get?page=${page || 1}&limit=${limit || 5}`);
-export const searchSubjectApi = (query, page, limit) => request("GET", `/subject/search?q=${query}&page=${page || 1}&limit=${limit}`);
+export const getSubjectsApi = (page, limit) =>
+  request("GET", `/subject/get?page=${page || 1}&limit=${limit || 5}`);
+export const searchSubjectApi = (query, page, limit) =>
+  request("GET", `/subject/search?q=${query}&page=${page || 1}&limit=${limit}`);
 export const getOneSubjectApi = (id) => request("GET", `/subject/get/${id}`);
 export const getSubjectsListApi = () => request("GET", "/subject/getList");
 export const addSubjectApi = (data) => request("POST", "/subject/add", data);
@@ -47,6 +48,8 @@ export const deleteSubjectApi = (id) =>
 
 export const getUnitApi = (id) => request("GET", `/unit/${id}`);
 export const getUnitUrlApi = (id) => request("GET", `/unit/url/${id}`);
+export const addUnitApi = (id, data) =>
+  request("POST", `/unit/add/${id}`, data);
 
 
 // bookmark routes

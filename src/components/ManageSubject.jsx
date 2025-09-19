@@ -13,6 +13,7 @@ import { VscLoading } from "react-icons/vsc";
 
 function ManageUnit() {
   const [subjectName, setSubjectName] = useState("");
+  const [description, setDescription] = useState("");
   const [tags, setTags] = useState([]);
   const [keywords, setKeywords] = useState([]);
   const fileInput = useRef(null);
@@ -52,23 +53,25 @@ function ManageUnit() {
 
       const formData = new FormData();
       formData.append("title", subjectName);
+      formData.append("description", description);
       formData.append("tags", JSON.stringify(tags));
       formData.append("keywords", JSON.stringify(keywords));
       if (fileInput.current && fileInput.current.files[0]) {
         formData.append("file", fileInput.current.files[0]);
       }
 
-
       const { data, error } = await addSubjectApi(formData);
       if (error) {
         return setError(error.message);
       }
       setSubjectName("");
+      setDescription("");
       setTags([]);
       setKeywords([]);
       setSuccess(data.message);
       loadSubjectList();
     } catch (error) {
+      console.log(error);
       setError(error.msg);
     } finally {
       setIsPending((prev) => ({ ...prev, isAddingSubject: false }));
@@ -124,7 +127,14 @@ function ManageUnit() {
         <h4 className="text-xl font-semibold py-6">Add Subject</h4>
 
         <div className=" w-full p-4 flex justify-center items-start flex-col gap-4">
-          <input ref={fileInput} type="file" name="file" id="file" required={true} />
+          <input
+            ref={fileInput}
+            type="file"
+            name="file"
+            id="file"
+            required={true}
+            className="bg-white"
+          />
           <label htmlFor="name">Subject name</label>
           <input
             required
@@ -134,6 +144,14 @@ function ManageUnit() {
             className="w-full bg-bg-color px-4 py-1 rounded-md outline-none border-2 border-border-color mb-2"
             placeholder="Input the Unit Name"
           />
+          <label htmlFor="description">Description </label>
+          <textarea
+            required
+            value={description}
+            onChange={(e) => setDescription(e.target.value)}
+            className="w-full min-h-40 bg-bg-color px-4 py-1 rounded-md outline-none border-2 border-border-color mb-2"
+            placeholder="Input the Unit Name"
+          ></textarea>
           {/* tag input  */}
           <label htmlFor="tagInput">Tags:</label>
           <div className="bg-bg-color p-4 w-full flex justify-start flex-wrap items-center gap-1">
@@ -230,9 +248,10 @@ function ManageUnit() {
           subjectList.map((item) => (
             <div
               key={item._id}
-              className="w-full grid grid-cols-2 py-3 border-t-2 border-white"
+              className="w-full grid grid-cols-3 py-3 border-t-2 border-white"
             >
               <span className="place-self-start">{item.title}</span>
+              <span className="place-self-start">{item._id}</span>
               <span className="place-self-end flex justify-end gap-4 items-center">
                 <button className="bg-bg-color text-text-muted flex justify-center items-center gap-2 px-2 py-0.5 border-[1px] border-text-muted text-sm cursor-pointer select-none outline-none rounded-sm">
                   <BiEdit /> Edit
