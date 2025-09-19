@@ -15,7 +15,7 @@ const AdminProtected = lazy(() => import("./components/AdminProtected"));
 const PdfViewer = lazy(() => import("./pages/PdfViewer"));
 const Profile = lazy(() => import("./pages/Profile"));
 const DownloadSubject = lazy(() => import("./pages/DownloadSubject"));
-const DownloadPdfViewer = lazy(() => "./pages/DownloadPdfViewer");
+const DownloadPdfViewer = lazy(() => import("./pages/DownloadPdfViewer"));
 const Search = lazy(() => import("./pages/Search"));
 const Admin = lazy(() => import("./pages/Admin"));
 const AllSubject = lazy(() => import("./pages/AllSubject"));
